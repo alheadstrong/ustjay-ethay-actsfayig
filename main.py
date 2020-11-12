@@ -6,6 +6,10 @@ from bs4 import BeautifulSoup
 
 app = Flask(__name__)
 
+template = """
+
+"""
+
 
 def get_fact():
 
@@ -16,10 +20,22 @@ def get_fact():
 
     return facts[0].getText()
 
+def get_link(fact):
+    payload = {'input_text': fact}
+    url = 'https://hidden-journey-62459.herokuapp.com/piglatinize/'
+
+    r = requests.post(url, data=payload)
+
+    return r.url
+
 
 @app.route('/')
 def home():
-    return "FILL ME!"
+    fact = get_fact().strip()
+    link = get_link(fact)
+    body = '<a href="{}">{}</a>'.format(link,link)
+
+    return Response(response=body, mimetype="text/html")
 
 
 if __name__ == "__main__":
